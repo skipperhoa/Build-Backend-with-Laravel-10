@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Role;
 
 class User extends Authenticatable  implements JWTSubject
 {
@@ -65,4 +66,22 @@ class User extends Authenticatable  implements JWTSubject
     {
         return [];
     }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class,'role_user','user_id','role_id');
+    }
+
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+
+
 }
