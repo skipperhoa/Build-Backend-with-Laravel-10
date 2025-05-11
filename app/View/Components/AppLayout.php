@@ -12,6 +12,8 @@ class AppLayout extends Component
      */
     public function render(): View
     {
+
+        // views/layouts/app.blade.php  (x-app-layout)
         return view('layouts.app');
     }
 }
