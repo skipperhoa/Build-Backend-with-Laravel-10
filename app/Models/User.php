@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable  implements JWTSubject
 {
@@ -23,6 +24,9 @@ class User extends Authenticatable  implements JWTSubject
         'name',
         'email',
         'password',
+        'avatar',
+        'status',
+
     ];
 
     /**
@@ -44,6 +48,25 @@ class User extends Authenticatable  implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function isAdmin(){
+        return $this->role==="admin";
+    }
+
+    public function  getIsAdminAttribute(): bool
+    {
+        return $this->role==="admin";
+    }
+
+    public function role() : Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value === 'admin' ? true: false
+        );
+    }
+
+
 
     // Rest omitted for brevity
 
@@ -68,7 +91,7 @@ class User extends Authenticatable  implements JWTSubject
     }
 
     public function roles(){
-        return $this->belongsToMany(Role::class,'role_user','user_id','role_id');
+        return $this->belongsToMany(Role::class,'user_role', 'user_id', 'role_id');
     }
 
     public function products(){

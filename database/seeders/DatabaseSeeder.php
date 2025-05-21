@@ -18,5 +18,14 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // hoặc chúng ta gọi tại đây
+        // sau đó chạy lệnh php artisan db:seed  là được
+        $this->call([
+            UserSeeder::class,
+            // thêm các seeder khác nếu cần
+        ]);
+
+
     }
 }
