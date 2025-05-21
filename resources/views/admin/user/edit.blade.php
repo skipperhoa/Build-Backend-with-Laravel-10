@@ -378,14 +378,17 @@
                 },
                 setItemDefault() {
                     const collection = document.getElementsByClassName("arr_role_edit");
+                    if (collection.length === 0) return;
                     const value = collection[0].value;
+                    const values = value.split(",");
                     const options = document.getElementById("select").options;
                     for (let i = 0; i < options.length; i++) {
-                        if (options[i].value == value) {
-
+                        if (values.includes(options[i].value)) {
                             this.options[i].selected = true;
-                            this.options[i].element = value;
+                            this.options[i].element = options[i].value;
                             this.selected.push(i);
+                        } else {
+                            this.options[i].selected = false;
                         }
 
 

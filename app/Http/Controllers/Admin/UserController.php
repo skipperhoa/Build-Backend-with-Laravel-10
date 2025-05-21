@@ -107,6 +107,7 @@ class UserController extends Controller
         $roles = Role::all();
         $arr_roles = $user->roles()->pluck('role_id')->toArray();
         $user->roles = implode(',',$arr_roles);
+
         return view('admin.user.edit',compact('user','roles'));
     }
 
