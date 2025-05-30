@@ -23,4 +23,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::resource('roles', RoleController::class)->names('roles');
     Route::resource('permissions', PermissionController::class)->names('permissions');
     Route::get('roles/{role}/permissions', [RoleController::class, 'getPermissionsFromRoleId'])->name('roles.permissions');
+    Route::get('permissions-not/{role}', [PermissionController::class, 'getPermissionsNotInRole'])->name('permission.not_in_role');
 });

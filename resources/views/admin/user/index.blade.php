@@ -139,17 +139,18 @@
                                 </p>
                             </div>
                         </th>
+
                         <th class="py-3">
                             <div class="flex items-center">
                                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                    Email
+                                    Roles
                                 </p>
                             </div>
                         </th>
                         <th class="py-3">
                             <div class="flex items-center">
                                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                    Role
+                                    Permissions
                                 </p>
                             </div>
                         </th>
@@ -176,39 +177,69 @@
                         <tr>
                             <td class="py-3">
                                 <div class="flex items-center">
-                                    <div class="flex items-center gap-3">
+                                    <div class="flex flex-row items-center gap-2">
                                         <div class="h-[50px] w-[50px] overflow-hidden rounded-md">
                                             <img src="{{ $user?->avatar }}"
-                                                alt="Image">
+                                                alt="Image" class="w-full h-full object-cover">
                                         </div>
-                                        <div>
+                                        <div class="flex flex-col justify-center mt-2">
                                             <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">
                                                 {{ $user->name }}
                                             </p>
                                             <span class="text-gray-500 text-theme-xs dark:text-gray-400">
                                                 {{ $user->created_at->format('d/m/Y') }}
                                             </span>
+                                            <span class="text-gray-500 text-theme-xs dark:text-gray-400">
+                                                {{ $user->email }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3">
-                                <div class="flex items-center">
-                                    <p class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                        {{ $user->email }}
-                                    </p>
-                                </div>
-                            </td>
+
                             <td class="py-3">
                                 <div class="flex items-center">
                                     <div>
 
                                         @foreach ($user->roles as $role)
                                             <span
-                                                class="inline-flex items-center justify-center gap-1 rounded-full bg-gray-500 px-2.5 py-0.5 text-sm font-medium text-white dark:bg-white/5 dark:text-white">
+                                                class="inline-flex items-center justify-center gap-1 rounded-full bg-success-500 px-2.5 py-0.5 text-sm font-medium text-white dark:bg-white/5 dark:text-white">
                                                 {{ $role->name }}
                                             </span>
                                         @endforeach
+                                    </div>
+                                </div>
+                            </td>
+                             <td class="py-3">
+                                <div class="flex flex-col gap-1">
+                                    <div>
+                                        <label for="" class="block  hidden text-sm text-gray-500 dark:text-gray-400">Permission from User Role</label>
+                                        <div class="flex flex-wrap gap-1">
+
+                                            @foreach ($user->roles as $role)
+
+                                               @foreach ($role->permissions as $permission)
+
+                                                    <span
+                                                        class="inline-flex items-center justify-center gap-1 rounded-full bg-warning-500 px-2.5 py-0.5 text-sm font-medium text-white dark:bg-white/5 dark:text-white">
+                                                        {{ $permission->name }}
+                                                    </span>
+                                                @endforeach
+
+                                            @endforeach
+                                        </div>
+                                        </div>
+                                    <div>
+                                        <label for="" class="block hidden text-sm text-gray-500 dark:text-gray-400">Permission from User</label>
+                                        <div class="flex flex-wrap gap-1">
+
+                                            @foreach ($user->permissions as $permission)
+                                                 <span
+                                                    class="inline-flex items-center justify-center gap-1 rounded-full bg-warning-500 px-2.5 py-0.5 text-sm font-medium text-white dark:bg-white/5 dark:text-white">
+                                                    {{ $permission->name }}
+                                                </span>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </td>

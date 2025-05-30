@@ -327,9 +327,12 @@
                     }
                 },
                 getPermissionsFromRoleId() {
-                    let str_role = this.selected.toString();
+                    const roles = this.options;
+                    const selectedRoles = roles.filter(role => role.selected);
+                    const selectedRoleValues = selectedRoles.map(role => role.value);
+                    const selectedRoleString = selectedRoleValues.join(",");
                     $.ajax({
-                        url: "/admin/roles/" + str_role + "/permissions",
+                        url: "/admin/roles/" + selectedRoleString + "/permissions",
                         type: "GET",
                         success: function (data) {
                             console.log(data);

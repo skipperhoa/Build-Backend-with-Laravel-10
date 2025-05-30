@@ -121,7 +121,7 @@
                         </div>
 
                         <!-- Elements -->
-                        <div>
+                        <div x-data="dropdown()" x-init="loadOptions()" >
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Multiple Select Role
                             </label>
@@ -132,10 +132,10 @@
                                     @endforeach
                                 </select>
 
-                                <div x-data="dropdown()" x-init="loadOptions()" class="flex flex-col items-center">
+                                <div class="flex flex-col items-center">
                                     <input type="hidden" class="arr_role_edit" value="{{ $user->roles }}" />
                                     <input name="roles" class="roles" type="hidden" :value="selectedValues()" />
-                                    <div class="relative z-20 inline-block w-full">
+                                    <div class="relative z-50 inline-block w-full">
                                         <div class="relative flex flex-col items-center">
                                             <div @click="open" class="w-full">
                                                 <div
@@ -189,7 +189,7 @@
                                             </div>
                                             <div class="w-full px-4">
                                                 <div x-show.transition.origin.top="isOpen()"
-                                                    class="max-h-select absolute top-full left-0 z-40 w-full overflow-y-auto rounded-lg bg-white shadow-sm dark:bg-gray-900"
+                                                    class="max-h-select absolute top-full left-0 z-50 w-full overflow-y-auto rounded-lg bg-white shadow-sm dark:bg-gray-900"
                                                     @click.outside="close">
                                                     <div class="flex w-full flex-col">
                                                         <template x-for="(option,index) in options"
@@ -223,6 +223,12 @@
 
                                 </div>
                             </div>
+                              <div class="mt-5">
+                                @include('admin.user.permission-more', [
+                                    'user' => $user
+
+                                ])
+                            </div>
                         </div>
 
 
@@ -233,8 +239,8 @@
                                 Upload Avatar file
                             </label>
 
-                                <input type="file" name="avatar"
-                                    class="focus:border-ring-brand-300 shadow-theme-xs focus:file:ring-brand-300 h-11 w-full overflow-hidden rounded-lg border border-gray-300 bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:border-collapse file:cursor-pointer file:rounded-l-lg file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:py-3 file:pr-3 file:pl-3.5 file:text-sm file:text-gray-700 placeholder:text-gray-400 hover:file:bg-gray-100 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:text-white/90 dark:file:border-gray-800 dark:file:bg-white/[0.03] dark:file:text-gray-400 dark:placeholder:text-gray-400" />
+                            <input type="file" name="avatar"
+                                class="focus:border-ring-brand-300 shadow-theme-xs focus:file:ring-brand-300 h-11 w-full overflow-hidden rounded-lg border border-gray-300 bg-transparent text-sm text-gray-500 transition-colors file:mr-5 file:border-collapse file:cursor-pointer file:rounded-l-lg file:border-0 file:border-r file:border-solid file:border-gray-200 file:bg-gray-50 file:py-3 file:pr-3 file:pl-3.5 file:text-sm file:text-gray-700 placeholder:text-gray-400 hover:file:bg-gray-100 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:text-white/90 dark:file:border-gray-800 dark:file:bg-white/[0.03] dark:file:text-gray-400 dark:placeholder:text-gray-400" />
 
                             <div
                                 class="w-20 h-20 mt-2 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
@@ -249,7 +255,7 @@
                                 Status
                             </label>
 
-                            <div x-data="{ switcherToggle: {{ $user->status>0 ? 'true' : 'false' }} }">
+                            <div x-data="{ switcherToggle: {{ $user->status > 0 ? 'true' : 'false' }} }">
 
                                 <label for="toggle1"
                                     class="flex cursor-pointer items-center gap-3 text-sm font-medium text-gray-700 select-none dark:text-gray-400">
@@ -273,6 +279,8 @@
 
 
                         </div>
+
+
 
                         <div>
                             <button
@@ -306,6 +314,9 @@
                 options: [],
                 selected: [],
                 show: false,
+                options_permission: [],
+                selected_permission: [],
+                show_permission: false,
                 open() {
 
                     this.show = true;
@@ -321,28 +332,28 @@
                     if (!this.options[index].selected) {
                         this.options[index].selected = true;
                         this.options[index].element = event.target;
-                        console.log("hoa", index);
+
                         this.selected.push(index);
                     } else {
                         this.selected.splice(this.selected.lastIndexOf(index), 1);
                         this.options[index].selected = false;
                     }
-                    console.log(this.options[index].value);
+                    //console.log(this.options[index].value);
 
                     this.getPermissionsFromRoleId();
+                    this.loadInit_permission();
                 },
                 remove(index, option) {
 
                     this.options[option].selected = false;
                     this.selected.splice(index, 1);
-                    if (this.selected.length > 0) {
-                        this.getPermissionsFromRoleId();
-                    } else {
-                        $(".permissions").html("");
-                    }
+
+
+                     $(".permissions").html("");
+                     this.getPermissionsFromRoleId();
+                     this.loadInit_permission();
                 },
                 loadOptions() {
-
 
                     const options = document.getElementById("select").options;
                     for (let i = 0; i < options.length; i++) {
@@ -350,20 +361,26 @@
                             value: options[i].value,
                             text: options[i].innerText,
                             selected: options[i].getAttribute("selected") != null ?
-                                options[i].getAttribute("selected") :
-                                false,
+                                options[i].getAttribute("selected") : false,
                         });
                     }
                     this.setItemDefault();
                     this.getPermissionsFromRoleId();
+                    this.loadInit_permission();
                 },
                 getPermissionsFromRoleId() {
-                    let str_role = this.selected.toString();
+                    const roles = this.options;
+                    const selectedRoles = roles.filter(role => role.selected);
+                    console.log("role",selectedRoles)
+                    const selectedRoleValues = selectedRoles.map(role => role.value);
+                    let selectedRoleString = selectedRoleValues.join(",");
+                    selectedRoleString = selectedRoleString.length > 0 ? selectedRoleString : "-1";
+
                     $.ajax({
-                        url: "/admin/roles/" + str_role + "/permissions",
+                        url: "/admin/roles/" + selectedRoleString + "/permissions",
                         type: "GET",
                         success: function(data) {
-                            console.log(data);
+                            console.log("before", data)
                             let permissions = data.permissions;
                             let html = "";
                             for (let i = 0; i < permissions.length; i++) {
@@ -372,14 +389,31 @@
                                     permissions[i].name +
                                     "</span>";
                             }
-                            $(".permissions").html(html);
+                            $(".permissions").html(html); // hiện thị danh sách quyền của role
+
+                            if (data.permissions_not_in_roles.length > 0) {
+                                console.log("check data.permissions_not_in_roles", data
+                                    .permissions_not_in_roles)
+                                let html_not_in_roles = "";
+                                for (let i = 0; i < data.permissions_not_in_roles.length; i++) {
+                                    html_not_in_roles +=
+                                        '<option value="' + data.permissions_not_in_roles[i].id + '">' +
+                                        data.permissions_not_in_roles[i].name +
+                                        "</option>";
+                                }
+                                // hiện thị danh sách quyền (KHÔNG PHẢI TRONG ROLE)
+                                $(".select_permissions").html(html_not_in_roles);
+
+                            }
                         },
                     });
                 },
                 setItemDefault() {
+                    // GIÚP SET MẶT ĐỊNH CÁC ROLE HIỆN CÓ CỦA USER
                     const collection = document.getElementsByClassName("arr_role_edit");
                     if (collection.length === 0) return;
                     const value = collection[0].value;
+                    //console.log("arr_role_edit", value) // 2,1
                     const values = value.split(",");
                     const options = document.getElementById("select").options;
                     for (let i = 0; i < options.length; i++) {
@@ -403,8 +437,99 @@
                         return this.options[option].value;
                     });
                 },
+
+                // dropdownPermissions
+                open_permission() {
+                    this.show_permission = true;
+                },
+                close_permission() {
+                    this.show_permission = false;
+                },
+                isOpen_permission() {
+                    return this.show_permission === true;
+                },
+                select_permission(index, event) {
+                    if (!this.options_permission[index].selected) {
+                        this.options_permission[index].selected = true;
+                        this.options_permission[index].element = event.target;
+                        this.selected_permission.push(index);
+                    } else {
+                        this.selected_permission.splice(this.selected_permission.lastIndexOf(index), 1);
+                        this.options_permission[index].selected = false;
+                    }
+
+
+                    // this.getPermissionsFromRoleId();
+                },
+                remove_permission(index, option) {
+                    this.options_permission[option].selected = false;
+                    this.selected_permission.splice(index, 1);
+                    if (this.selected_permission.length > 0) {
+                        //   this.getPermissionsFromRoleId();
+                    } else {
+                        $(".permissions").html("");
+                    }
+                },
+                loadOptions_permission() {
+
+                    const options = document.getElementById("select_permissions").options;
+
+                    for (let i = 0; i < options.length; i++) {
+                        this.options_permission.push({
+                            value: options[i].value,
+                            text: options[i].innerText,
+                            selected: options[i].getAttribute("selected") != null ?
+                                options[i].getAttribute("selected") :
+                                false,
+                        });
+                    }
+                    this.setItemDefault_permission();
+                },
+                setItemDefault_permission() {
+                    const collection = document.getElementsByClassName("arr_permission_edit");
+                    //console.log("arr_permission_edit", collection)
+                    if (collection.length === 0) {
+                        console.log("ronng")
+                        return;
+                    }
+                    const value = collection[0].value;
+                    const values = value.split(",");
+                     console.log("arr_permission_edit", values)
+                    const options = document.getElementById("select_permissions").options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (values.includes(options[i].value)) {
+                            this.options_permission[i].selected = true;
+                            this.options_permission[i].element = options[i].value;
+                            this.selected_permission.push(i);
+                        } else {
+                            this.options_permission[i].selected = false;
+                        }
+
+
+                    }
+                    //collection[0].remove();
+
+                },
+                loadInit_permission() {
+                    this.selected_permission = [];
+                    this.options_permission = [];
+                    this.show_permission = false;
+                    setTimeout(() => {
+
+                        this.loadOptions_permission();
+
+                    }, timeout = 600);
+                },
+
+                selectedValues_permission() {
+
+                    return this.selected_permission.map((option) => {
+                        return this.options_permission[option].value;
+                    });
+                }
+
             };
-        }
+        };
     </script>
 
 </x-app-layout>

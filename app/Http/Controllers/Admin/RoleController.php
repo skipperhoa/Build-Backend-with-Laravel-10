@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use App\Models\Permission;
 class RoleController extends Controller
 {
     /**
@@ -62,19 +63,42 @@ class RoleController extends Controller
     {
         //
     }
-    public function getPermissionsFromRoleId($roleId)
+    public function getPermissionsFromRoleId($id)
     {
-        $arr_role = explode(',', $roleId);
-        $roles = Role::whereIn('id', $arr_role)->with('permissions')->get();
-        if ($roles) {
+
+        if ($id == -1) {
+            // No roles selected, return all permissions as not in roles
             return response()->json([
-                'permissions' => $roles->pluck('permissions')->flatten(),
-                'message' => 'Permissions retrieved successfully',
+            'permissions' => [],
+            'permissions_not_in_roles' => Permission::all(),
+            'message' => 'Permissions retrieved successfully',
             ]);
-        } else {
+        }
+
+        $roleIds = array_filter(explode(',', $id));
+        if (empty($roleIds)) {
             return response()->json([
-                'message' => 'Role not found',
+            'message' => 'Role not found',
             ], 404);
         }
+
+        $roles = Role::whereIn('id', $roleIds)->with('permissions')->get();
+        if ($roles->isEmpty()) {
+            return response()->json([
+            'message' => 'Role not found',
+            ], 404);
+        }
+
+        $permissions = $roles->pluck('permissions')->flatten()->unique('id')->values();
+        $permissionIds = $permissions->pluck('id')->toArray();
+        // lấy danh sách permission không thuộc role
+        $permissionsNotInRoles = Permission::whereNotIn('id', $permissionIds)->get();
+
+        return response()->json([
+            'permissions' => $permissions,
+            'permissions_not_in_roles' => $permissionsNotInRoles,
+            'message' => 'Permissions retrieved successfully',
+        ]);
+
     }
 }
