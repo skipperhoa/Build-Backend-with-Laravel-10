@@ -68,6 +68,7 @@ class PermissionController extends Controller
     public function getPermissionsNotInRole($roleId)
     {
 
+
        $roleIds = explode(',', $roleId);
 
         // Lấy danh sách role kèm permissions

@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+
 class UserController extends Controller
 {
     /**
@@ -54,17 +57,27 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * sử dụng form request "StoreUserRequest"
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-
-        $request->validate([
+        // code ole trước đó
+       /*  $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'roles' => 'required|exists:roles,id',
-        ]);
+        ]); */
+
+        // Code sau khi , Tối ưu với form request
+        $validated = $request->validated();
+
+        if(!$validated) {
+            return redirect()->back()->withErrors($request->errors())->withInput();
+        }
+
+        Debugbar::info($request->all());
 
         if($request->hasFile('avatar')){
             $file = $request->file('avatar');
@@ -101,9 +114,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
+       // $user = User::find($id);
         if(!$user){
             return redirect()->route('admin.users.index')->with('error','User not found');
         }
@@ -131,20 +144,27 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
 
        // dd($request->all());
-        $request->validate([
+       /*  $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,'.$id,
             'password' => 'nullable|string|min:8|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'roles' => 'required|exists:roles,id',
 
-        ]);
+        ]); */
 
-        $user = User::find($id);
+        // code sau khi , tối ưu với form request
+        $validated = $request->validated();
+
+        if(!$validated) {
+            return redirect()->back()->withErrors($request->errors())->withInput();
+        }
+
+        //$user = User::find($id);
         if(!$user){
             return redirect()->route('admin.users.index')->with('error','User not found');
         }
@@ -188,9 +208,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
+      //  $user = User::find($id);
         if(!$user){
             return redirect()->route('admin.users.index')->with('error','User not found');
         }

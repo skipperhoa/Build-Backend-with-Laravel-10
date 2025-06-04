@@ -56,7 +56,7 @@
     @endif
 
     <!-- ====== Form Elements Section Start -->
-    <form action="{{ route('admin.users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mt-2">

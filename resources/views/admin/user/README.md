@@ -1,4 +1,4 @@
-### Tích hợp User Permission
+# Tích hợp User Permission
 Đầu tiền chúng ta cần xây dựng table chứa mối quan hệ giữa User và Permission 
 ```php
 Schema::create('user_permission', function (Blueprint $table) {
@@ -121,4 +121,45 @@ Xử lý ajax load các permission ra giao diện
                         },
                     });
                 },
+```
+-------
+
+# TẠO FORM REQUEST 
+```php
+php artisan make:request StoreUserRequest
+```
+
+Mục đích: Xác định các quy tắc kiểm tra dữ liệu gửi lên từ form.
+
+Giải thích từng dòng:
+
+name: bắt buộc, chuỗi, dài tối đa 255 ký tự.
+
+email: bắt buộc, đúng định dạng email, không trùng trong bảng users.
+
+password: bắt buộc, ít nhất 8 ký tự, phải trùng password_confirmation.
+
+avatar: không bắt buộc, nhưng nếu có thì phải là file ảnh đúng định dạng và dung lượng <= 2MB.
+
+roles: bắt buộc, phải tồn tại id trong bảng roles.
+
+status: bắt buộc, phải là 0 hoặc 1.
+```php
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+         return [
+            'name' => 'required|string|max:255',
+            'email'      => 'required|email|unique:users,email',
+            'password'   => 'required|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'roles' => 'required|exists:roles,id',
+            'status' => 'required|in:0,1',
+        ];
+    }
 ```
