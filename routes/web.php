@@ -19,20 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test',function(Request $request){
-
-    // cách 1:
-    if($request->has('status')){
-        $request->merge(['status' => 1]);
-    }
-
-    // cách 2:
-    $request->mergeIfMissing(['status' => 1]);
-
-    return Response()->json([
-        'status' => $request->status
-    ]);
-});
+require __DIR__.'/test.php';
 
 require __DIR__.'/admin.php';
 

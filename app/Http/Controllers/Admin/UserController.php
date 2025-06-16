@@ -12,6 +12,7 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
+use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     /**
@@ -40,9 +41,11 @@ class UserController extends Controller
       $users2 = User::find($arr_id)->toArray();
       $users3 = User::findMany($arr_id)->toArray();
         dd($users1,$users2,$users3); */
+
         $users = User::orderBy('id','desc')->paginate(5);
         Debugbar::info($users);
         Debugbar::error('Error!');
+        Log::info("message",[$users]);
         return view('admin.user.index',compact('users'));
     }
 
@@ -69,13 +72,14 @@ class UserController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'roles' => 'required|exists:roles,id',
         ]); */
-
+       // dd($request->all());
         // Code sau khi , Tối ưu với form request
         $validated = $request->validated();
 
         if(!$validated) {
             return redirect()->back()->withErrors($request->errors())->withInput();
         }
+
 
         Debugbar::info($request->all());
 

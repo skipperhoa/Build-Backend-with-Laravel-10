@@ -3,7 +3,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
 <!-- SIDEBAR HEADER -->
 <div :class="sidebarToggle ? 'justify-center' : 'justify-between'"
     class="flex items-center gap-2 pt-8 sidebar-header pb-7">
-    <a href="index.html">
+    <a href="{{route('dashboard')}}">
         <span class="logo" :class="sidebarToggle ? 'hidden' : ''">
             <img class="dark:hidden" src="{{asset('tailadmin/src/images/logo/logo.svg')}}" alt="Logo" />
             <img class="hidden dark:block" src="{{asset('tailadmin/src/images/logo/logo-dark.svg')}}" alt="Logo" />
@@ -37,7 +37,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
             <ul class="flex flex-col gap-4 mb-6">
                 <!-- Menu Item Dashboard -->
                 <li>
-                    <a href="#"
+                    <a href="{{route('dashboard')}}"
                         @click.prevent="selected = (selected === 'Dashboard' ? '':'Dashboard')"
                         class="menu-item group"
                         :class="(selected === 'Dashboard') || (page === 'ecommerce' || page === 'analytics' ||
@@ -74,7 +74,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         <ul :class="sidebarToggle ? 'lg:hidden' : 'flex'"
                             class="flex flex-col gap-1 mt-2 menu-dropdown pl-9">
                             <li>
-                                <a href="index.html" class="menu-dropdown-item group"
+                                <a href="{{ route('dashboard') }}" class="menu-dropdown-item group"
                                     :class="page === 'ecommerce' ? 'menu-dropdown-item-active' :
                                         'menu-dropdown-item-inactive'">
                                     eCommerce
@@ -87,7 +87,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                 <!-- Menu Item Dashboard -->
 
                 <!-- Menu Item Calendar -->
-                <li>
+                {{-- <li>
                     <a href="calendar.html" @click="selected = (selected === 'Calendar' ? '':'Calendar')"
                         class="menu-item group"
                         :class="(selected === 'Calendar') && (page === 'calendar') ? 'menu-item-active' :
@@ -105,7 +105,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                             Calendar
                         </span>
                     </a>
-                </li>
+                </li> --}}
                 <!-- Menu Item Calendar -->
 
                 <!-- Menu Item Profile -->
@@ -130,8 +130,31 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                 </li>
                 <!-- Menu Item Profile -->
 
-                <!-- Menu Item Forms -->
+                <!-- Menu Item categories -->
                 <li>
+                    <a href="{{ route('admin.categories.index') }}" @click="selected = (selected === 'Category' ? '':'Category')"
+                        class="menu-item group"
+                        :class="(selected === 'Category') && (page === 'category') ? 'menu-item-active' :
+                        'menu-item-inactive'">
+                         <svg :class="(selected === 'Forms') || (page === 'formElements' || page === 'formLayout' ||
+                            page === 'proFormElements' || page === 'proFormLayout') ?
+                        'menu-item-icon-active' : 'menu-item-icon-inactive'"
+                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M5.5 3.25C4.25736 3.25 3.25 4.25736 3.25 5.5V18.5C3.25 19.7426 4.25736 20.75 5.5 20.75H18.5001C19.7427 20.75 20.7501 19.7426 20.7501 18.5V5.5C20.7501 4.25736 19.7427 3.25 18.5001 3.25H5.5ZM4.75 5.5C4.75 5.08579 5.08579 4.75 5.5 4.75H18.5001C18.9143 4.75 19.2501 5.08579 19.2501 5.5V18.5C19.2501 18.9142 18.9143 19.25 18.5001 19.25H5.5C5.08579 19.25 4.75 18.9142 4.75 18.5V5.5ZM6.25005 9.7143C6.25005 9.30008 6.58583 8.9643 7.00005 8.9643L17 8.96429C17.4143 8.96429 17.75 9.30008 17.75 9.71429C17.75 10.1285 17.4143 10.4643 17 10.4643L7.00005 10.4643C6.58583 10.4643 6.25005 10.1285 6.25005 9.7143ZM6.25005 14.2857C6.25005 13.8715 6.58583 13.5357 7.00005 13.5357H17C17.4143 13.5357 17.75 13.8715 17.75 14.2857C17.75 14.6999 17.4143 15.0357 17 15.0357H7.00005C6.58583 15.0357 6.25005 14.6999 6.25005 14.2857Z"
+                                fill="" />
+                        </svg>
+
+                        <span class="menu-item-text" :class="sidebarToggle ? 'lg:hidden' : ''">
+                            Category
+                        </span>
+                    </a>
+                </li>
+                <!-- Menu Item Profile -->
+
+                <!-- Menu Item Forms -->
+               {{--  <li>
                     <a href="#" @click.prevent="selected = (selected === 'Forms' ? '':'Forms')"
                         class="menu-item group"
                         :class="(selected === 'Forms') || (page === 'formElements' || page === 'formLayout' ||
@@ -177,11 +200,11 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </ul>
                     </div>
                     <!-- Dropdown Menu End -->
-                </li>
+                </li> --}}
                 <!-- Menu Item Forms -->
 
                 <!-- Menu Item Tables -->
-                <li>
+               {{--  <li>
                     <a href="#" @click.prevent="selected = (selected === 'Tables' ? '':'Tables')"
                         class="menu-item group"
                         :class="(selected === 'Tables') || (page === 'basicTables' || page === 'dataTables') ?
@@ -225,11 +248,11 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </ul>
                     </div>
                     <!-- Dropdown Menu End -->
-                </li>
+                </li> --}}
                 <!-- Menu Item Tables -->
 
                 <!-- Menu Item Pages -->
-                <li>
+               {{--  <li>
                     <a href="#" @click.prevent="selected = (selected === 'Pages' ? '':'Pages')"
                         class="menu-item group"
                         :class="(selected === 'Pages') || (page === 'fileManager' ||
@@ -286,7 +309,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </ul>
                     </div>
                     <!-- Dropdown Menu End -->
-                </li>
+                </li> --}}
                 <!-- Menu Item Pages -->
             </ul>
         </div>

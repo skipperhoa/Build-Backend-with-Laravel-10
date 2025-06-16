@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     /**
@@ -29,7 +30,8 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         $token = Auth::guard('api')->attempt($credentials);
-
+       // Log::info("message",[$token]);
+        Log::withContext(['request' => Auth::guard('api')->user()]);
         if (! $token ) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }

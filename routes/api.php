@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use GuzzleHttp\Psr7\Response;
+use App\Http\Controllers\Admin\DownloadFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +35,7 @@ Route::group([
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 
+
 });
 
 
@@ -50,3 +51,6 @@ Route::post('/upload/avatar',function(Request $request){
         'path' => public_path().'/uploads/'.$name));
     }
 });
+
+// viết route download file, middleware api
+Route::post('download-file', [DownloadFileController::class, 'download'])->middleware('api');
