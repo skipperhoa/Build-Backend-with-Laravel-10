@@ -127,7 +127,7 @@ class CategoryController extends Controller
         // lấy tất cả dữ liệu từ request , trừ trường "images"
        // $data = $request->except('image');
         // gán mảng data tới category
-        //$category->fill($data);
+        $category->fill($request->all());
 
         $category->save();
         //$category->update($request->all());
