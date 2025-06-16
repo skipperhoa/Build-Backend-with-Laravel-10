@@ -69,16 +69,17 @@ class CategoryController extends Controller
 
 
         // kiểm tra tồn tại "image" hay không, nếu có, ta sẽ lưu hình ảnh
-        if($request->hasFile('image')) {
-            $file = $request->file('image');
+        $image = null;
+        if($request->hasFile('file')) {
+            $file = $request->file('file');
             $name = $file->getClientOriginalName();
             $exection = $file->getClientOriginalExtension();
             $file->move(public_path().'/uploads/', $name);
-            $request->merge(['image' => URL::to('/').'/uploads/'.$name]);
+            $urlImage = URL::to('/').'/uploads/'.$name;
+            $image = $urlImage;
         }
-
+        $request->mergeIfMissing(['image' => $image]);
         $category = Category::create($request->all());
-
         return redirect()->route('admin.categories.index')->with('success','Category created successfully');
 
 
@@ -115,8 +116,8 @@ class CategoryController extends Controller
         }
 
         // check kiểm tra tấm hình
-        if($request->hasFile('image')) {
-            $file = $request->file('image');
+        if($request->hasFile('file')) {
+            $file = $request->file('file');
             $name = $file->getClientOriginalName();
             $exection = $file->getClientOriginalExtension();
             $file->move(public_path().'/uploads/', $name);
@@ -124,9 +125,9 @@ class CategoryController extends Controller
             $category->image = $image;
         }
         // lấy tất cả dữ liệu từ request , trừ trường "images"
-        $data = $request->except('image');
+       // $data = $request->except('image');
         // gán mảng data tới category
-        $category->fill($data);
+        //$category->fill($data);
 
         $category->save();
         //$category->update($request->all());
