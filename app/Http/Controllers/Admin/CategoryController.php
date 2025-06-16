@@ -68,7 +68,7 @@ class CategoryController extends Controller
         }
 
 
-        // kiểm tra tồn tại "image" hay không, nếu có, ta sẽ lưu hình ảnh
+        // kiểm tra tồn tại "file" hay không, nếu có, ta sẽ lưu hình ảnh
         $image = null;
         if($request->hasFile('file')) {
             $file = $request->file('file');
@@ -125,7 +125,7 @@ class CategoryController extends Controller
             $category->image = $image;
 
         }
-        // lấy tất cả dữ liệu từ request , trừ trường "images"
+
         $request->mergeIfMissing(['image' => $category->image]);
         // gán mảng data tới category
         $category->fill($request->all());
