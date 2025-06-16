@@ -123,9 +123,10 @@ class CategoryController extends Controller
             $file->move(public_path().'/uploads/', $name);
             $image = URL::to('/').'/uploads/'.$name;
             $category->image = $image;
+
         }
         // lấy tất cả dữ liệu từ request , trừ trường "images"
-       // $data = $request->except('image');
+        $request->mergeIfMissing(['image' => $category->image]);
         // gán mảng data tới category
         $category->fill($request->all());
 

@@ -23,7 +23,7 @@ class UpdateCategoryRequest extends FormRequest
         $this->merge([
             'category_id' => $this->category_id ?? null,
             'slug' => $this->slug ?? Str::slug($this->title),
-            'image' => $this->image??null
+            //'image' => $this->image??null
         ]);
     }
 
