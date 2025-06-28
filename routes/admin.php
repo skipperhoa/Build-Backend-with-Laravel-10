@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Models\Role;
 
 Route::get('/dashboard', function () {
@@ -27,6 +28,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('roles/{role}/permissions', [RoleController::class, 'getPermissionsFromRoleId'])->name('roles.permissions');
     Route::get('permissions-not/{role}', [PermissionController::class, 'getPermissionsNotInRole'])->name('permission.not_in_role');
     Route::resource('categories', CategoryController::class)->names('categories');
+    Route::resource('products', ProductController::class)->names('products');
 
 
 });

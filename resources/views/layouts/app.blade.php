@@ -52,5 +52,5 @@ $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(valu
     <!-- ===== Page Wrapper End ===== -->
     <script defer src="{{ asset('tailadmin/build/bundle.js') }}"></script>
 </body>
-
+@stack('scripts')
 </html>

@@ -15,19 +15,28 @@ Route::get('/test',function(Request $request){
         'status' => $request->status
     ]);
 });
-
 // cách sử dụng saveMany() để lưu nhiều bản ghi cùng lúc
 Route::get('/test/save-many', function () {
 
-    $users = [];
-    for ($i = 0; $i < 3; $i++) {
-        $users[] = new \App\Models\User([
-            'name' => 'User ' . $i,
-            'email' => 'user' . $i . '@example.com',
-            'password' => bcrypt('password'),
-        ]);
-    }
-    \App\Models\User::query()->saveMany($users);
+    // lấy tất cả permissions
+    $permissions = \App\Models\Permission::get();
+
+    // dd($permissions->toArray());
+
+    $user =\App\Models\User::where('email', 'nguyen.thanh.hoa.ctec@gmail.com')->first();
+
+    // dùng saveMany() khi lưu nhiều bản ghi cùng lúc
+    $user->permissions()->saveMany($permissions);
+
+
+    // Xoá sạch tất cả permission của user
+   /*   $permissionArrayId =$permissions->pluck('id')->toArray();
+     $user->permissions()->detach();
+     $user->permissions()->sync($permissionArrayId); */
+
+   /*  $user_permissions = $user->permissions;
+
+    dd($user_permissions->toArray()); */
 
     return response()->json(['message' => 'Users created successfully']);
 });
