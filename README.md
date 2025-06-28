@@ -19,3 +19,6 @@ Dù bạn là **người mới bắt đầu** hay **lập trình viên có kinh 
 ✅ **Triển khai lên server thực tế** 🌍  
 
 📌 **Đừng quên ĐĂNG KÝ kênh [Hòa Nguyễn Coder](https://www.youtube.com/@hoanguyencoder7136) để cập nhật video mới nhất nhé!** 🎯 
+
+### DEMO 
+![hoanguyenit.com](https://github.com/skipperhoa/Build-Backend-with-Laravel-10/tree/Demo/1.png)
