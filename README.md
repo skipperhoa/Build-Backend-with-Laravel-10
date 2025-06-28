@@ -1,5 +1,8 @@
 # 🚀 Xây dựng Backend mạnh mẽ với Laravel 10
 
+### Nhánh Dev : 
+https://github.com/skipperhoa/Build-Backend-with-Laravel-10/tree/dev
+
 Trong series này, chúng ta sẽ đi từ **cơ bản đến nâng cao**, hướng dẫn bạn cách:  
 - Thiết lập Laravel  
 - Tạo API  
