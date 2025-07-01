@@ -16,12 +16,10 @@ use App\Http\Controllers\Admin\DownloadFileController;
 |
 */
 
-
+/* setup api login & register */
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
 Route::group([
 
     'middleware' => 'api',
@@ -34,9 +32,13 @@ Route::group([
     Route::post('register', [AuthController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
-
-
 });
+/* end */
+
+/* setup api_v1 */
+require __DIR__.'/api_v1.php';
+
+
 
 
 Route::post('/upload/avatar',function(Request $request){

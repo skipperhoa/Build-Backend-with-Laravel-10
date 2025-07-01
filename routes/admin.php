@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ListAllApiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
@@ -29,6 +30,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('permissions-not/{role}', [PermissionController::class, 'getPermissionsNotInRole'])->name('permission.not_in_role');
     Route::resource('categories', CategoryController::class)->names('categories');
     Route::resource('products', ProductController::class)->names('products');
-
+    Route::get('list-all-api', [ListAllApiController::class,'index'])->name('list.all.api');
 
 });

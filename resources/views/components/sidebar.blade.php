@@ -339,7 +339,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
         <div>
             <h3 class="mb-4 text-xs uppercase leading-[20px] text-gray-400">
                 <span class="menu-group-title" :class="sidebarToggle ? 'lg:hidden' : ''">
-                    others
+                    API
                 </span>
 
                 <svg :class="sidebarToggle ? 'lg:block hidden' : 'hidden'"
@@ -354,7 +354,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
             <ul class="flex flex-col gap-4 mb-6">
                 <!-- Menu Item Charts -->
                 <li>
-                    <a href="#" @click.prevent="selected = (selected === 'Charts' ? '':'Charts')"
+                    <a href="{{route('admin.list.all.api')}}"
                         class="menu-item group"
                         :class="(selected === 'Charts') || (page === 'lineChart' || page === 'barChart' ||
                             page === 'pieChart') ? 'menu-item-active' : 'menu-item-inactive'">
@@ -368,7 +368,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </svg>
 
                         <span class="menu-item-text" :class="sidebarToggle ? 'lg:hidden' : ''">
-                            Charts
+                            List API
                         </span>
 
                         <svg class="menu-item-arrow absolute right-2.5 top-1/2 -translate-y-1/2 stroke-current"
@@ -383,7 +383,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                     </a>
 
                     <!-- Dropdown Menu Start -->
-                    <div class="overflow-hidden transform translate"
+                    {{-- <div class="overflow-hidden transform translate"
                         :class="(selected === 'Charts') ? 'block' : 'hidden'">
                         <ul :class="sidebarToggle ? 'lg:hidden' : 'flex'"
                             class="flex flex-col gap-1 mt-2 menu-dropdown pl-9">
@@ -391,7 +391,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                                 <a href="line-chart.html" class="menu-dropdown-item group"
                                     :class="page === 'lineChart' ? 'menu-dropdown-item-active' :
                                         'menu-dropdown-item-inactive'">
-                                    Line Chart
+                                    Category
                                 </a>
                             </li>
                             <li>
@@ -402,13 +402,13 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                                 </a>
                             </li>
                         </ul>
-                    </div>
+                    </div> --}}
                     <!-- Dropdown Menu End -->
                 </li>
                 <!-- Menu Item Charts -->
 
                 <!-- Menu Item Ui Elements -->
-                <li>
+               {{--  <li>
                     <a href="#"
                         @click.prevent="selected = (selected === 'UIElements' ? '':'UIElements')"
                         class="menu-item group"
@@ -496,11 +496,11 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </ul>
                     </div>
                     <!-- Dropdown Menu End -->
-                </li>
+                </li> --}}
                 <!-- Menu Item Ui Elements -->
 
                 <!-- Menu Item Authentication -->
-                <li>
+               {{--  <li>
                     <a href="#"
                         @click.prevent="selected = (selected === 'Authentication' ? '':'Authentication')"
                         class="menu-item group"
@@ -552,7 +552,7 @@ class="sidebar fixed left-0 top-0 z-9999 flex h-screen w-[290px] flex-col overfl
                         </ul>
                     </div>
                     <!-- Dropdown Menu End -->
-                </li>
+                </li> --}}
                 <!-- Menu Item Authentication -->
             </ul>
         </div>

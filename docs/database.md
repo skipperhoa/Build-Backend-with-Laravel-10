@@ -142,3 +142,5 @@ Hệ thống được xây dựng cho một cửa hàng chuyên kinh doanh xe ô
 - Tất cả các bảng đều có trường created_at và updated_at để theo dõi thời điểm tạo và cập nhật.
 - Các quan hệ nên được định nghĩa rõ bằng **foreign keys** trong quá trình migration (nếu dùng framework như Laravel).
 - Cân nhắc tạo **index** trên các cột liên kết như user_id, role_id, category_id, order_id, product_id để tối ưu truy vấn.
+
+
