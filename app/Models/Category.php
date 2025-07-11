@@ -36,4 +36,14 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'category_id');
     }
+
+    public function getAllChildrenIds($category){
+         $ids = [];
+        foreach ($category->children as $child) {
+            $ids[] = $child->id;
+            // Đệ quy lấy tiếp các con của $child
+            $ids = array_merge($ids, $this->getAllChildrenIds($child));
+        }
+        return $ids;
+    }
 }

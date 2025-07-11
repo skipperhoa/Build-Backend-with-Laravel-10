@@ -88,12 +88,25 @@
                 </h3>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex flex-row items-center gap-3">
                  <div>
                     <form action="{{ route('admin.categories.index') }}" method="GET">
                         <label>Tìm kiếm : </label>
                         <input type="text" name="search" placeholder="Tìm kiếm"class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800  rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"/>
                     </form>
+                </div>
+                <div class="flex flex-row items-center gap-2">
+
+                    <a href="{{ route('admin.categories.index',['filter' => 'parent']) }}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+                        Parent Category
+                    </a>
+                     <a href="{{ route('admin.categories.index',['filter' => 'child']) }}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-500 px-4 py-2.5 text-theme-sm font-medium text-black shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+                        Child Category
+                    </a>
+
+
                 </div>
                 <a href="{{ route('admin.categories.create') }}"
                     class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-brand-500 px-4 py-2.5 text-theme-sm font-medium text-white shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
@@ -116,6 +129,13 @@
                 <!-- table header start -->
                 <thead>
                     <tr class="border-gray-100 border-y dark:border-gray-800">
+                        <th class="py-3">
+                            <div class="flex items-center">
+                                <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
+                                    Image
+                                </p>
+                            </div>
+                        </th>
                         <th class="py-3">
                             <div class="flex items-center">
                                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
@@ -169,6 +189,13 @@
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
                     @foreach ($categories as $category)
                         <tr>
+                            <td class="py-3">
+                                @if($category->image)
+                                    <img src="{{ $category->image??'' }}" alt="" class="w-12 h-12 rounded-xl">
+                                @else
+                                    <div class="w-12 h-12 rounded-xl bg-gray-200"></div>
+                                @endif
+                            </td>
                             <td class="py-3">
                                  <p class="font-medium text-gray-800 text-theme-sm dark:text-white/90">{{ $category->title }}</p>
                             </td>
@@ -230,10 +257,8 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="6">
-
+                        <td colspan="7">
                             {{ $categories->withQueryString()->links() }}
-
                         </td>
                     </tr>
             </table>

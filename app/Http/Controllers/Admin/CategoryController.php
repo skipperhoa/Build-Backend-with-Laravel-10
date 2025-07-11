@@ -22,23 +22,40 @@ class CategoryController extends Controller
         // lấy tất cả categories
         $searchCategory = $request->search;
         $categories = Category::query()
-            ->when($searchCategory,fn($query,$searchCategory)=>$query
-            ->where('title', 'like', '%'.$searchCategory.'%')
-            ->orWhere('slug', 'like', '%'.$searchCategory.'%'))
-            ->orderBy('id', 'desc')->paginate(10);
+            ->when($searchCategory, function ($query, $searchCategory) {
+                $query->where(function ($q) use ($searchCategory) {
+                    $q->where('title', 'like', "%{$searchCategory}%")
+                     ->orWhere('slug', 'like', "%{$searchCategory}%");
+                });
+            })
+            ->when($request->filled('filter'), function ($query) use ($request) {
+                if ($request->filter === 'parent') {
+                    $query->whereNull('category_id');
+                }else if ($request->filter === 'child') {
+                    $query->whereNotNull('category_id');
+                }
+                 else {
+                    $query->where('category_id', $request->filter);
+                }
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         /* cách 2 */
         $categories2 = Category::whereAny(
-            [
-                'title',
-                'slug'
-            ],
-            'LIKE',
-            "%{$searchCategory}%"
-        )->orderBy('id', 'desc')->paginate(10);
-
-       // dd($categories, $categories2);
-
+                ['title', 'slug'],
+                'LIKE',
+                "%{$searchCategory}%"
+        );
+        if($request->has('filter')) {
+            $filter = $request->filter;
+            if($filter != 'parent') {
+                $categories2 = $categories2->where('category_id', $filter);
+            }else{
+                $categories2 = $categories2->WhereNull('category_id');
+            }
+        }
+        $categories2 = $categories2->orderBy('id', 'desc')->paginate(10);
 
         return view('admin.category.index', compact('categories'));
     }
@@ -101,6 +118,7 @@ class CategoryController extends Controller
         // gọi lấy danh sách categories parent
         if(!$category) return abort(404);
         $categories = Category::where('category_id', null)->get();
+
         return view('admin.category.edit', compact('categories', 'category'));
     }
 
