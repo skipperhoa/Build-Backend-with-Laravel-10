@@ -37,7 +37,7 @@ class CategoryController extends Controller
             $query = Category::where('title',$filter)->first();
 
             if(!$query) return Response()->json(["status" => false, "message" => "Không tìm thấy danh mục"]);
-            $categoriesIds = $query->getAllChildrenIds($query);
+            $categoriesIds = array_merge([$query->id], $query->getAllChildrenIds($query));
 
             //check sort
             $column_sort = explode(':', $sort); //created_at:desc
@@ -49,13 +49,21 @@ class CategoryController extends Controller
             }
             //end sort
 
-            $products = Product::whereIn('category_id', $categoriesIds)
+            // lấy danh sách products
+            $products = Product::with('category')->whereIn('category_id', $categoriesIds)
                         ->orderBy($column, $direction)
-                        ->paginate($pageSize, ['*'], 'page', $page);
+                        ->paginate($pageSize, ['*'], 'page', $page)->withQueryString();
+
+            // lấy danh sách categories
+            $parent_id =$query->getRootParent($query);
+            $category = Category::find($parent_id)->first();
+            $cateIds = array_merge([$parent_id->id], $category->getAllChildrenIds($category));
+            $categories = Category::whereIn('id', $cateIds)->get();
 
             return response()->json([
                 "status" => true,
                 "categoriesIds" => $categoriesIds,
+                "categories" => $categories,
                 "products" => $products,
                 "direction"=>$direction,
                 "column"=>$column

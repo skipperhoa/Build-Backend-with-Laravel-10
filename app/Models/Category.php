@@ -46,4 +46,15 @@ class Category extends Model
         }
         return $ids;
     }
+
+    public function getRootParent($category)
+    {
+        // Nếu category không có parent, chính nó là cha gốc
+        if (!$category->parent) {
+            return $category;
+        }
+
+        // Đệ quy tiếp lên cha
+        return $this->getRootParent($category->parent);
+    }
 }
