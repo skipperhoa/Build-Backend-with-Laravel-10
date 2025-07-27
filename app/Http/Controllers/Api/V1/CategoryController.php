@@ -62,6 +62,7 @@ class CategoryController extends Controller
 
             return response()->json([
                 "status" => true,
+                "search" => $filter,
                 "categoriesIds" => $categoriesIds,
                 "categories" => $categories,
                 "products" => $products,
