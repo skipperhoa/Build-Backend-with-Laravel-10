@@ -9,5 +9,9 @@ Route::group([
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
+    /* product */
+    Route::get('products', [\App\Http\Controllers\Api\V1\ProductController::class, 'filter'])->name('products.filter');
+    Route::get('products/{id}', [\App\Http\Controllers\Api\V1\ProductController::class, 'show'])->name('products.show');
+
 });
 ?>

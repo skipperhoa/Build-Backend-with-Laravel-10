@@ -109,5 +109,62 @@ class User extends Authenticatable  implements JWTSubject
         return $this->belongsToMany(Permission::class,'user_permission', 'user_id', 'permission_id');
     }
 
+    // Kiểm tra user có permission không
+    public function hasPermission($permission)
+    {
+        // Permission trực tiếp
+        if ($this->permissions()->where('name', $permission)->exists()) {
+            return true;
+        }
+
+        // Permission qua roles
+        return $this->roles()
+            ->whereHas('permissions', function ($query) use ($permission) {
+                $query->where('name', $permission);
+            })->exists();
+    }
+
+    // Kiểm tra nhiều permissions (AND logic)
+    public function hasAllPermissions(array $permissions)
+    {
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Kiểm tra có ít nhất 1 permission (OR logic)
+    public function hasAnyPermission(array $permissions)
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Kiểm tra role
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    // Lấy tất cả permissions của user (từ cả role và direct)
+    public function getAllPermissions()
+    {
+        // Permissions trực tiếp
+        $directPermissions = $this->permissions()->pluck('name');
+
+        // Permissions từ roles
+        $rolePermissions = Permission::whereHas('roles', function ($query) {
+            $query->whereIn('roles.id', $this->roles()->pluck('roles.id'));
+        })->pluck('name');
+
+        return $directPermissions->merge($rolePermissions)->unique();
+    }
+
 
 }

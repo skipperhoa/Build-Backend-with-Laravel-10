@@ -5,6 +5,9 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -23,6 +26,14 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Tải tất cả permissions trong DB
+        $permissions = \App\Models\Permission::all();
+
+        foreach ($permissions as $permission) {
+            Gate::define($permission->name, function (User $user) use ($permission) {
+                // Tùy logic: kiểm tra user có quyền trực tiếp hoặc qua role
+                return $user->hasPermission($permission->name);
+            });
+        }
     }
 }
