@@ -211,6 +211,8 @@ Route::get('/test/transform-method-in-laravel',function(){
 
 // import multiple class models
 use App\Models\{User, Product, Category};
+use GuzzleHttp\Psr7\Response;
+
 Route::get('/test/import-multiple-class-models', function () {
 
     $users = User::all();
@@ -324,12 +326,14 @@ Route::get('/test/http-pool-multiple-request', function () {
 
     $responses = Http::pool(fn (Pool $pool)=>[
         $pool->as('categories')->timeout(5)->get('https://dummyjson.com/products/category-list'),
-        $pool->as('products')->timeout(5)->get('https://dummyjson.com/products')
+        $pool->as('products')->timeout(5)->get('https://dummyjson.com/products'),
+        $pool->as('categories_list')->timeout(5)->get('http://127.0.0.1:8000/api/v1/categories')
     ]);
 
     $data = [
             'categories' => $responses['categories']->json(),
-            'products' => $responses['products']->json()
+            'products' => $responses['products']->json(),
+            'categories_list' => $responses['categories_list']->json()
         ];
 
     return response()->json([
@@ -402,3 +406,24 @@ Route::get('/test/service-calls', function () {
     }
 });
 */
+
+Route::get('/test/multiple-request-using-http-pool',function(){
+    // call api prouduct, categories,...
+
+    $responses = Http::pool(fn (Pool $pool) => [
+        $pool->as('categories')->timeout(5)->get('http://127.0.0.1:8000/api/v1/categories'),
+        $pool->as('products')->timeout(5)->get('http://127.0.0.1:8000/api/v1/products'),
+        $pool->as('products_category')->timeout(5)->get('https://dummyjson.com/products/category-list')
+    ]);
+
+    $data = [
+        'categories' => $responses['categories']->json(),
+        'products' => $responses['products']->json(),
+        'products_category' => $responses['products_category']->json()
+    ];
+
+    return response()->json([
+        'status' => true,
+        'data' => $data
+    ]);
+});

@@ -13,5 +13,8 @@ Route::group([
     Route::get('products', [\App\Http\Controllers\Api\V1\ProductController::class, 'filter'])->name('products.filter');
     Route::get('products/{id}', [\App\Http\Controllers\Api\V1\ProductController::class, 'show'])->name('products.show');
 
+    // cart
+    Route::resource('carts', \App\Http\Controllers\Api\V1\CartController::class);
+
 });
 ?>

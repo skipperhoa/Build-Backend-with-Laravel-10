@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Product extends Model
 {
     use HasFactory;
@@ -27,8 +27,8 @@ class Product extends Model
     public function category(){
         return $this->belongsTo(Category::class, 'category_id');
     }
-    public function carts() {
-        return $this->hasMany(Cart::class, 'product_id');
+     public function carts():BelongsToMany{
+        return $this->belongsToMany(\App\Models\Cart::class,'cart_item','product_id','cart_id')->withPivot('quantity');
     }
 
     public function ordersDetails() {
