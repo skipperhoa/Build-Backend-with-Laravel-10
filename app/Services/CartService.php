@@ -104,7 +104,7 @@ class CartService
 
             return response()->json([
                 'message' => 'Product added to cart successfully',
-                'cart' => $this->getCarts_v2(),
+                'carts' => $this->getCarts_v2(),
             ], 200);
         } catch (ModelNotFoundException $exception) {
             return response()->json([
@@ -127,7 +127,7 @@ class CartService
         $cart->products()->detach($productId);
         return Response()->json([
             'message' => 'Product removed from cart successfully',
-            'cart' => $this->getCarts_v2(),
+            'carts' => $this->getCarts_v2(),
             'status' => 200
         ]);
     }

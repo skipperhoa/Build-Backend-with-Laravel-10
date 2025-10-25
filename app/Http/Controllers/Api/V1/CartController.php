@@ -24,7 +24,7 @@ class CartController extends Controller
         $carts = $this->cartService->getCarts_v2();
         return response()->json([
             'status' => 200,
-            'data' => $carts
+            'carts' => $carts
         ]);
     }
 

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\JWTException;
+
 class AuthController extends Controller
 {
     /**
@@ -17,7 +22,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'checkToken']]);
     }
 
     /**
@@ -30,9 +35,9 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         $token = Auth::guard('api')->attempt($credentials);
-       // Log::info("message",[$token]);
+        // Log::info("message",[$token]);
         Log::withContext(['request' => Auth::guard('api')->user()]);
-        if (! $token ) {
+        if (! $token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -40,25 +45,25 @@ class AuthController extends Controller
     }
 
     /* register */
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $token =Auth::guard('api')->login($user);
+        $token = Auth::guard('api')->login($user);
 
         return response()->json([
             'user' => $user,
-            'status'=>'success',
+            'status' => 'success',
             'authorization' => [
                 'token' => $token,
                 'type' => 'bearer',
 
             ]
         ]);
-
     }
 
     /**
@@ -107,5 +112,47 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
+    }
+
+
+    public function checkToken()
+    {
+
+        try {
+            // ✅ Lấy token từ header
+            $token = JWTAuth::getToken();
+
+            if (!$token) {
+                return response()->json([
+                    'status' => -2,
+                    'message' => 'Không có token trong request.'
+                ], 401);
+            }
+
+            // ✅ Parse token để lấy payload
+            $payload = JWTAuth::setToken($token)->getPayload();
+
+            // ✅ Kiểm tra thời gian hết hạn
+            $exp = $payload->get('exp');
+            $now = time();
+
+            if ($now >= $exp) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Token đã hết hạn.'
+                ], 401);
+            }
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Token còn hạn và hợp lệ.'
+            ], 200);
+        } catch (TokenExpiredException $e) {
+            return response()->json(['status' => 0, 'message' => 'Token đã hết hạn.'], 401);
+        } catch (TokenInvalidException $e) {
+            return response()->json(['status' => -1, 'message' => 'Token không hợp lệ.'], 401);
+        } catch (JWTException $e) {
+            return response()->json(['status' => -2, 'message' => 'Không có token hoặc token lỗi.'], 401);
+        }
     }
 }

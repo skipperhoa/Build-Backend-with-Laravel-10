@@ -1,11 +1,13 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-Route::get('/test',function(Request $request){
+
+Route::get('/test', function (Request $request) {
 
     // cách 1:
-    if($request->has('status')){
+    if ($request->has('status')) {
         $request->merge(['status' => 1]);
     }
 
@@ -24,18 +26,18 @@ Route::get('/test/save-many', function () {
 
     // dd($permissions->toArray());
 
-    $user =\App\Models\User::where('email', 'nguyen.thanh.hoa.ctec@gmail.com')->first();
+    $user = \App\Models\User::where('email', 'nguyen.thanh.hoa.ctec@gmail.com')->first();
 
     // dùng saveMany() khi lưu nhiều bản ghi cùng lúc
     $user->permissions()->saveMany($permissions);
 
 
     // Xoá sạch tất cả permission của user
-   /*   $permissionArrayId =$permissions->pluck('id')->toArray();
+    /*   $permissionArrayId =$permissions->pluck('id')->toArray();
      $user->permissions()->detach();
      $user->permissions()->sync($permissionArrayId); */
 
-   /*  $user_permissions = $user->permissions;
+    /*  $user_permissions = $user->permissions;
 
     dd($user_permissions->toArray()); */
 
@@ -51,8 +53,8 @@ Route::get('/test/validate', function (Request $request) {
         'size' => 'required|in:small,medium,big',
         'brand.*' => 'in:apple,oppo,realme',
     ]);
-   if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
     return response()->json(['message' => 'Users created successfully']);
@@ -60,7 +62,7 @@ Route::get('/test/validate', function (Request $request) {
 
 
 
-Route::get('/test/raw-value',function(Request $request){
+Route::get('/test/raw-value', function (Request $request) {
 
     $first = \App\Models\User::orderBy('created_at', 'asc')->rawValue('YEAR(`created_at`) as first_year');
 
@@ -72,8 +74,8 @@ Route::get('/test/raw-value',function(Request $request){
     $totalPrice = \App\Models\Product::where('category_id', 1)->rawValue('SUM(`price`) as total_price');
 
     $statRow = \App\Models\Product::where('category_id', 1)
-    ->selectRaw('SUM(price) as total_price, AVG(price) as avg_price, MIN(price) as min_price, MAX(price) as max_price')
-    ->first();
+        ->selectRaw('SUM(price) as total_price, AVG(price) as avg_price, MIN(price) as min_price, MAX(price) as max_price')
+        ->first();
 
     $category = \App\Models\Category::withSum('products as total_price', 'price')->find(1);
 
@@ -85,13 +87,12 @@ Route::get('/test/raw-value',function(Request $request){
         'category' => $category,
         'statRow' => $statRow
     ]);
-
 });
 
 /*
 inRandomOrder() được sử dụng để lấy các bản ghi theo thứ t ự ngẫu nhiên.
 */
-Route::get('/test/is-random-order',function(){
+Route::get('/test/is-random-order', function () {
 
     $products = \App\Models\Product::inRandomOrder()->limit(3)->get();
 
@@ -102,14 +103,15 @@ Route::get('/test/is-random-order',function(){
 });
 
 use Illuminate\Support\Facades\DB;
-Route::get('/test/query-raw-in-laravel',function(Request $request){
+
+Route::get('/test/query-raw-in-laravel', function (Request $request) {
 
     $search = $request->txt_search;
     // check name or lastname or email
     $users = \App\Models\User::query()
-    ->where(function($subQuery) use ($search){
-        $subQuery->where(DB::raw('CONCAT(`name`, " ", `email`)'), 'LIKE', "%{$search}%");
-    })->get();
+        ->where(function ($subQuery) use ($search) {
+            $subQuery->where(DB::raw('CONCAT(`name`, " ", `email`)'), 'LIKE', "%{$search}%");
+        })->get();
 
     return response()->json([
         'status' => true,
@@ -140,17 +142,18 @@ Route::get('/test/where-value-between', function () {
         'status' => true,
         'products1' => $products1,
         'products2' => $products2,
-       // 'products3' => $products3
+        // 'products3' => $products3
     ]);
 });
 
 use Illuminate\Validation\Rules\Password;
+
 Route::get('/test/form-request-validation', function () {
     $validator = Validator::make(request()->all(), [
         'name' => [
             'required'
         ],
-        'email' =>[
+        'email' => [
             'required',
             'email'
         ],
@@ -168,12 +171,12 @@ Route::get('/test/form-request-validation', function () {
         return response()->json(['errors' => $validator->errors()], 422);
     }
     return response()->json(['message' => 'Form request validation passed successfully']);
-
 });
 
 // create a password auto
 use Illuminate\Support\Str;
-Route::get('/test/create-a-password-auto',function(){
+
+Route::get('/test/create-a-password-auto', function () {
     $password = Str::password(
         16,  //length default: 32
         true, // letters default: true
@@ -187,7 +190,7 @@ Route::get('/test/create-a-password-auto',function(){
 });
 
 // su dung transform method
-Route::get('/test/transform-method-in-laravel',function(){
+Route::get('/test/transform-method-in-laravel', function () {
 
     // ví dụ tạo một mảng cart
     $list_carts = collect([
@@ -196,7 +199,7 @@ Route::get('/test/transform-method-in-laravel',function(){
         ['id' => 3, 'name' => 'Product 3', 'price' => 300],
     ]);
 
-    $list_carts->transform(function(array $cart){
+    $list_carts->transform(function (array $cart) {
         $cart['total_price'] = $cart['price'] * 2;
         return $cart;
     });
@@ -206,7 +209,6 @@ Route::get('/test/transform-method-in-laravel',function(){
     return Response()->json([
         'data' => $data
     ]);
-
 });
 
 // import multiple class models
@@ -224,7 +226,6 @@ Route::get('/test/import-multiple-class-models', function () {
         'products' => $products,
         'categories' => $categories
     ]);
-
 });
 
 // test benchmark get thoi gian thuc thi du lieu
@@ -236,7 +237,7 @@ Route::get('/test/benchmark', function () {
 
     $ms_all_products = Benchmark::measure(fn() => Product::all());
 
-    [$users,$time] = Benchmark::value(fn()=>User::latest()->take(10)->get());
+    [$users, $time] = Benchmark::value(fn() => User::latest()->take(10)->get());
 
     return Response()->json([
         'status' => true,
@@ -249,11 +250,11 @@ Route::get('/test/benchmark', function () {
 
 
 // test exclude_if
-Route::get('/test/exclude_if',function(Request $request){
+Route::get('/test/exclude_if', function (Request $request) {
 
     $data = $request->validate([
-        'is_approved' =>'required|boolean',
-       // 'rejection_reason' => 'exclude_if:is_approved,true|required|string',
+        'is_approved' => 'required|boolean',
+        // 'rejection_reason' => 'exclude_if:is_approved,true|required|string',
         // hoac
         'rejection_reason' => 'exclude_unless:is_approved,false|required|string',
     ]);
@@ -268,7 +269,7 @@ Route::get('/test/where-belongs-to', function () {
 
     $category = Category::find(1);
     $user = User::find(18);
-   /*  $products_old = Product::where('category_id', $category->id)
+    /*  $products_old = Product::where('category_id', $category->id)
                 ->where('user_id', $user->id)->first();
     $check_old = false;
     if($products_old->user_id==$user->id) $check_old = true;
@@ -285,9 +286,6 @@ Route::get('/test/where-belongs-to', function () {
         'check_new' => $check_new,
         'products_new' => $products_new
     ]);
-
-
-
 });
 
 // test permission and role in laravel
@@ -295,11 +293,11 @@ Route::get('/test/permission-role-by-user', function () {
     $user = User::find(1);
     $permissions = $user->permissions->pluck('name');
     $roles = $user->roles;
-    $roles_permissions = $roles->map(function($role){
+    $roles_permissions = $roles->map(function ($role) {
         return $role->permissions->pluck('name');
     });
 
-   /*  if($user->hasAnyPermission(['admin.users.index', 'admin.users.create'])) {
+    /*  if($user->hasAnyPermission(['admin.users.index', 'admin.users.create'])) {
         $users = User::all();
     } else {
         $users = [];
@@ -315,26 +313,25 @@ Route::get('/test/permission-role-by-user', function () {
         'roles_permissions' => $roles_permissions,
         'users' => $users
     ]);
-
-
 });
 
 
 use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
+
 Route::get('/test/http-pool-multiple-request', function () {
 
-    $responses = Http::pool(fn (Pool $pool)=>[
+    $responses = Http::pool(fn(Pool $pool) => [
         $pool->as('categories')->timeout(5)->get('https://dummyjson.com/products/category-list'),
         $pool->as('products')->timeout(5)->get('https://dummyjson.com/products'),
         $pool->as('categories_list')->timeout(5)->get('http://127.0.0.1:8000/api/v1/categories')
     ]);
 
     $data = [
-            'categories' => $responses['categories']->json(),
-            'products' => $responses['products']->json(),
-            'categories_list' => $responses['categories_list']->json()
-        ];
+        'categories' => $responses['categories']->json(),
+        'products' => $responses['products']->json(),
+        'categories_list' => $responses['categories_list']->json()
+    ];
 
     return response()->json([
         'status' => true,
@@ -369,7 +366,6 @@ Route::get('/test/http-pool-multiple-request', function () {
         'data' => $data
     ]);
     */
-
 });
 
 /*
@@ -407,10 +403,10 @@ Route::get('/test/service-calls', function () {
 });
 */
 
-Route::get('/test/multiple-request-using-http-pool',function(){
+Route::get('/test/multiple-request-using-http-pool', function () {
     // call api prouduct, categories,...
 
-    $responses = Http::pool(fn (Pool $pool) => [
+    $responses = Http::pool(fn(Pool $pool) => [
         $pool->as('categories')->timeout(5)->get('http://127.0.0.1:8000/api/v1/categories'),
         $pool->as('products')->timeout(5)->get('http://127.0.0.1:8000/api/v1/products'),
         $pool->as('products_category')->timeout(5)->get('https://dummyjson.com/products/category-list')
@@ -425,5 +421,39 @@ Route::get('/test/multiple-request-using-http-pool',function(){
     return response()->json([
         'status' => true,
         'data' => $data
+    ]);
+});
+
+
+// Date filtering
+Route::get('/test/date-filtering', function (Request $request) {
+
+    $date = \Carbon\Carbon::parse('2025-07-18');
+    $year = $date->year;
+    $month = $date->month;
+    $day = $date->day;
+    $week = $date->weekOfYear; // mode = 3 //29
+
+    $query_year = \App\Models\Product::query()->whereYear('created_at', $year)->get();
+    $query_month = \App\Models\Product::query()->whereMonth('created_at', $month)->get();
+    $query_day = \App\Models\Product::query()->whereDay('created_at', $day)->get();
+    $query_week = \App\Models\Product::query()->whereRaw('WEEK(created_at,3) = ?', [$week])->get();
+    $query_time = \App\Models\Product::query()->whereTime('created_at', '03:08:37')->get();
+
+
+    return Response()->json([
+        'status' => 200,
+        'products' => [
+            'date' => $date->toDateString(),
+            'year' => $year,
+            'month' => $month,
+            'day' => $day,
+            'week' => $week,
+            'query_year' => $query_year,
+            'query_month' => $query_month,
+            'query_day' => $query_day,
+            'query_week' => $query_week,
+            'query_time' => $query_time
+        ]
     ]);
 });

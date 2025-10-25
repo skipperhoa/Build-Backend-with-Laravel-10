@@ -32,7 +32,11 @@ Route::group([
     Route::post('register', [AuthController::class, 'register']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('check/token', [AuthController::class, 'checkToken']);
+
+
 });
+
 /* end */
 
 /* setup api_v1 */
