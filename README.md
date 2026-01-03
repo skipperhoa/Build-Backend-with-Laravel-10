@@ -10,6 +10,7 @@ Trong series này, chúng ta sẽ đi từ **cơ bản đến nâng cao**, hư�
 
 Dù bạn là **người mới bắt đầu** hay **lập trình viên có kinh nghiệm**, đây sẽ là hướng dẫn đầy đủ giúp bạn tạo một **backend chuyên nghiệp** cho ứng dụng **web** hoặc **mobile**. 🚀  
 
+
 ## 🔹 Những gì bạn sẽ học:
 ✅ **Cài đặt & cấu hình Laravel 10** 🏗️  
 ✅ **Tạo RESTful API với Laravel** 🔄  
