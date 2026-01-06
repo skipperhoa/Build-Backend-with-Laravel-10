@@ -21,6 +21,60 @@ Dù bạn là **người mới bắt đầu** hay **lập trình viên có kinh 
 
 📌 **Đừng quên ĐĂNG KÝ kênh [Hòa Nguyễn Coder](https://www.youtube.com/@hoanguyencoder7136) để cập nhật video mới nhất nhé!** 🎯 
 
+### DOWNLOAD PROJECT
+Tải project từ Github về máy tính
+```bash
+git clone https://github.com/skipperhoa/Build-Backend-with-Laravel-10.git laravel10
+git switch -c dev origin/dev
+```
+
+### INSTALL PROJECT
+
+📌 Build thư viện Tailadmin
+
+```bash
+cd laravel10/public/tailadmin
+npm install
+npm run build
+```
+
+📌 Cấu hình project
+```bash
+cd laravel10
+cp .env.example .env
+```
+📌 Chỉnh sửa thông tin kết nối database
+```bash
+// .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_app
+DB_USERNAME=root
+DB_PASSWORD=Hoa@1234
+```
+📌 Chạy lệnh tạo table 
+```bash
+cd laravel10
+php artisan migrate
+```
+
+📌 Chạy lệnh tạo dữ liệu mẫu
+```bash
+cd laravel10
+php artisan db:seed
+```
+
+📌 Chạy project
+```bash
+php artisan server
+```
+Nếu báo lỗi css giao diện hãy chạy lệnh build sau:
+```bash
+npm run build
+```
+
+
 ### DEMO 
 ![hoanguyenit.com](https://github.com/skipperhoa/Build-Backend-with-Laravel-10/blob/dev/demo/1.png)
 ![hoanguyenit.com](https://github.com/skipperhoa/Build-Backend-with-Laravel-10/blob/dev/demo/2.png)
