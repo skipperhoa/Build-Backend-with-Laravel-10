@@ -23,6 +23,11 @@ class DatabaseSeeder extends Seeder
         // sau đó chạy lệnh php artisan db:seed  là được
         $this->call([
             UserSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            UserRolePermissionSeeder::class,
             // thêm các seeder khác nếu cần
         ]);
 
